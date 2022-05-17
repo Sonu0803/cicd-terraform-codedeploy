@@ -1,0 +1,22 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+      - apt-add-repository "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+      - apt install terraform
+      - apt install -y docker.io
+
+  pre_build:
+    commands:
+      - terraform init
+      - terraform validate
+  
+  build:
+    commands:
+      - terraform plan
+      
+  post_build:
+    commands:
+      - terraform apply --auto-approve
